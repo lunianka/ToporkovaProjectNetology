@@ -1,20 +1,22 @@
 package ru.netology.toporkova.domain;
 
-public class CashbackOperation extends Operation{
-    private int cashbackAmount;
+import lombok.*;
+import ru.netology.toporkova.domain.ConsolePrintable;
 
-    public CashbackOperation(int id, int sum, String currency, String merchant, int cashbackAmount) {
-        super(id, sum, currency, merchant);
+@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+@ToString
+public class CashbackOperation extends Operation implements ConsolePrintable {
+    public int cashbackAmount;
+
+    public CashbackOperation(int sum, String currency, String merchant, int id, int cashbackAmount) {
+        super(sum, currency, merchant, id);
         this.cashbackAmount = cashbackAmount;
     }
 
-//    @Override
-//    public void printToConsole() {
-//        System.out.println("Cashback Operation");
-//        System.out.println("ID: " + getId());
-//        System.out.println("Sum: " + getSum());
-//        System.out.println("Currency: " + getCurrency());
-//        System.out.println("Merchant: " + getMerchant());
-//        System.out.println("Cashback Amount: " + cashbackAmount);
-//    }
+    @Override
+    public void printToConsole() {
+        System.out.println("Cashback Amount: " + cashbackAmount);
+    }
 }

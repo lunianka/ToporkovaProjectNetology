@@ -1,34 +1,19 @@
 package ru.netology.toporkova.configuration;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import ru.netology.toporkova.service.*;
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.ComponentScan;
+//import org.springframework.context.annotation.Configuration;
+//import ru.netology.toporkova.service.*;
 
-@Configuration
-@ComponentScan("ru.netology")
-public class ApplicationConfiguration {
-    @Bean
-    public AccountService accountService() {
-        return new AccountService();
-    }
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
-    @Bean
-    public AvatarsService avatarsService() {
-        return new AvatarsService();
-    }
-
-    @Bean
-    public ClientService clientService(AvatarsService avatarsService) {
-        return new ClientService(avatarsService);
-    }
-    @Bean
-    public DashboardService dashboardService(AvatarsService avatarsService) {
-        return new DashboardService(avatarsService);
-    }
-
-    @Bean
-    public OperationsService operationsService(ClientService clientService, AccountService accountService) {
-        return new OperationsService(clientService, accountService);
-    }
+@Getter
+@Setter
+@Component
+@ConfigurationProperties(prefix = "operation.processing")
+public class OperationProperties {
+    private int sleepMilliSeconds;
 }
