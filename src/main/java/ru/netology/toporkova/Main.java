@@ -1,11 +1,21 @@
 package ru.netology.toporkova;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.netology.toporkova.configuration.ApplicationConfiguration;
 import ru.netology.toporkova.domain.Client;
 import ru.netology.toporkova.domain.Operation;
+import ru.netology.toporkova.service.OperationsService;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
+
+    ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfiguration.class);
+    OperationsService operationsService = context.getBean(OperationsService.class);
+
+
     public final static int MAX_OPERATIONS = 1_000;
     public final static int MAX_CLIENTS = 100;
     private final static Operation[] operations = new Operation[MAX_OPERATIONS];
