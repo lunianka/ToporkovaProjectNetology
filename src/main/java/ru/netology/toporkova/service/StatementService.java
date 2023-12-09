@@ -1,7 +1,6 @@
 package ru.netology.toporkova.service;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.netology.toporkova.domain.Operation;
 
 import java.util.ArrayList;
@@ -9,25 +8,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@AllArgsConstructor
-@Component
+@Service
 public class StatementService {
     private final Map<Integer, List<Operation>> storage = new HashMap<>();
 
-    public void saveOperation(Operation operation) {
-        List<Operation> operations = storage.computeIfAbsent(operation.getId(), k -> new ArrayList<>());
+    public Map<Integer, List<Operation>> getStatement() {
+        return storage;
+    }
+
+    public List<Operation> getCustomerOperations(int customerId) {
+        return storage.containsKey(customerId) ? storage.getOrDefault(customerId, List.of()) : null;
+    }
+
+    public Operation getOperation(int clientId, int operationIndex) {
+        return storage.get(clientId).get(operationIndex);
+    }
+
+    public void setOperation(int clientId, Operation operation) {
+        List<Operation> operations = storage.getOrDefault(clientId, new ArrayList<>());
+
         operations.add(operation);
-    }
 
-    public String getOperations() {
-        return storage.toString();
-    }
-
-    public List<Operation> getOperationOnId(int operationId) {
-        return storage.getOrDefault(operationId, new ArrayList<>());
-    }
-
-    public void removeOperationsOnCustomerId(int id) {
-        storage.remove(id);
+        storage.put(clientId, operations);
     }
 }

@@ -7,6 +7,7 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class Customer {
-    int id;
-    String name;
+    private Integer id;
+    private String name;
+    private String password;
 }

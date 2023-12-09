@@ -1,18 +1,49 @@
 package ru.netology.toporkova.domain;
 
-import lombok.*;
-import ru.netology.toporkova.domain.ConsolePrintable;
+import java.util.Objects;
 
-@EqualsAndHashCode(callSuper = true)
-@Getter
-@Setter
-@ToString
 public class CashbackOperation extends Operation implements ConsolePrintable {
-    public int cashbackAmount;
+    private int cashbackAmount;
 
-    public CashbackOperation(int sum, String currency, String merchant, int id, int cashbackAmount) {
-        super(sum, currency, merchant, id);
+    public CashbackOperation(Integer id, Integer sum, Currency currency, String merchant, Integer customerId, int cashbackAmount) {
+        super(id, sum, currency, merchant, customerId);
         this.cashbackAmount = cashbackAmount;
+    }
+
+    public int getCashbackAmount() {
+        return cashbackAmount;
+    }
+
+    public void setCashbackAmount(int cashbackAmount) {
+        this.cashbackAmount = cashbackAmount;
+    }
+
+    @Override
+    public String toString() {
+        return "Operation{ id = " + getId() +
+                ", sum: " + getSum() +
+                ", currency: " + getCurrency() +
+                ", merchant: " + getMerchant() +
+                ", cashbackAmount " + cashbackAmount + "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (o == null || o.getClass() != this.getClass()) {
+            return false;
+        }
+
+
+        CashbackOperation operation = (CashbackOperation) o;
+        return Objects.equals(getId(), operation.getId())
+                && (Objects.equals(getSum(), operation.getSum())
+                && cashbackAmount == operation.cashbackAmount
+                && (getCurrency() != null && getCurrency().equals(operation.getCurrency()))
+                && (getMerchant() != null && getMerchant().equals(operation.getMerchant())));
     }
 
     @Override
