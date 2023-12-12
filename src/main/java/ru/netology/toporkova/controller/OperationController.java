@@ -1,22 +1,22 @@
 package ru.netology.toporkova.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.netology.toporkova.controller.dto.OperationDto;
 import ru.netology.toporkova.domain.Operation;
 import ru.netology.toporkova.service.AsyncInputOperationsService;
 import ru.netology.toporkova.service.StatementService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/operations")
 @RequiredArgsConstructor
 public class OperationController {
+
     private final AsyncInputOperationsService asyncInputOperationService;
-    private final StatementService statementService;
+    private static final StatementService statementService = new StatementService();
+
 
     @PostMapping
     public Operation postOperation(@RequestBody Operation operation) {
@@ -24,22 +24,31 @@ public class OperationController {
         return operation;
     }
 
-    @GetMapping("/{customerId}")
-    public ResponseEntity<Iterable<Operation>> getClientOperations(@PathVariable Integer customerId) {
-        List<Operation> operations = statementService.getCustomerOperations(customerId);
-        return operations == null
-                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(operations, HttpStatus.OK);
-    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Operation> deleteOperation(@PathVariable Integer id) {
-        for (List<Operation> operations : statementService.getStatement().values()){
-            for (Operation operation : operations){
-                if (operation.getId().equals(id))
-                    return new ResponseEntity<>(operation, HttpStatus.OK);
+    @GetMapping("/{customerId}")
+    public OperationDto getOperation(@PathVariable int customerId) {
+        for (Operation operation : asyncInputOperationService.getOperations()) {
+            if (operation.getCustomerId() == customerId) {
+                OperationDto operationsDTO = new OperationDto(operation.getId(), operation.getCustomerId(),
+                        operation.getSum(), operation.getCurrency(), operation.getMerchant());
+                return operationsDTO;
             }
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return null;
     }
+
+    @PostMapping("/{customerId}")
+    public void addOperation(@RequestBody Operation operation) {
+        asyncInputOperationService.addOperation(operation.getId(), operation.getCustomerId(),
+                operation.getSum(), operation.getCurrency(), operation.getMerchant());
+    }
+
+    public static Operation deleteOperation(Integer id) {
+        for (List<Operation> operations : statementService.getStatement().values())
+            for (Operation operation : operations)
+                if (operation.getId().equals(id))
+                    return operation;
+        return null;
+    }
+
 }

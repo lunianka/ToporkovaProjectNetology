@@ -3,8 +3,6 @@ package ru.netology.toporkova.domain;
 
 import lombok.*;
 
-import java.util.Objects;
-
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -13,7 +11,7 @@ public class LoanOperation extends Operation{
     private int loanId;
 
     public LoanOperation(Integer id, Integer sum, Currency currency, String merchant, Integer customerId, int loanId) {
-        super(id, sum, currency, merchant, customerId);
+        super(id, customerId, sum, currency, merchant);
         this.loanId = loanId;
     }
 
@@ -25,32 +23,6 @@ public class LoanOperation extends Operation{
         this.loanId = loanId;
     }
 
-    @Override
-    public String toString() {
-        return "Operation{ id = " + getId() +
-                ", loandID: " + loanId +
-                ", sum: " + getSum() +
-                ", currency: " + getCurrency() +
-                ", merchant: " + getMerchant() + "}";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        }
-
-        if (o == null || o.getClass() != this.getClass()) {
-            return false;
-        }
-
-        LoanOperation operation = (LoanOperation) o;
-        return Objects.equals(getId(), operation.getId())
-                && (Objects.equals(getSum(), operation.getSum())
-                && loanId == operation.loanId
-                && (getCurrency() != null && getCurrency().equals(operation.getCurrency()))
-                && (getMerchant() != null && getMerchant().equals(operation.getMerchant())));
-    }
     @Override
     public void printToConsole() {
         System.out.println("id: " + getId() +

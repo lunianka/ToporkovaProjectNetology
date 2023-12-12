@@ -20,7 +20,7 @@ public class StatementServiceTest extends OperationHistoryApiApplicationTest {
         String operationMerchant = "Restaurant";
         int customerId = 3;
 
-        Operation operation = new Operation(operationId, operationSum, operationCurrency, operationMerchant, customerId);
+        Operation operation = new Operation(operationId, customerId, operationSum, operationCurrency, operationMerchant);
         statementService.setOperation(customerId, operation);
         Operation operationOfService = statementService.getOperation(customerId, 0);
 

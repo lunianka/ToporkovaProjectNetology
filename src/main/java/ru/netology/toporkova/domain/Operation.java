@@ -10,10 +10,11 @@ import lombok.*;
 @Data
 public class Operation implements ConsolePrintable {
     private Integer id;
+    private Integer customerId;
     private Integer sum;
     private Currency currency;
     private String merchant;
-    private Integer customerId;
+
 
     @Override
     public void printToConsole() {

@@ -3,6 +3,7 @@ package ru.netology.toporkova.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.netology.toporkova.configuration.OperationProperties;
+import ru.netology.toporkova.domain.Currency;
 import ru.netology.toporkova.domain.Operation;
 
 import javax.annotation.PostConstruct;
@@ -16,6 +17,23 @@ public class AsyncInputOperationsService {
     private final OperationProperties properties;
 
     public boolean offerOperation(Operation operation) {
+        return queue.offer(operation);
+    }
+
+    public Queue<Operation> getOperations(){
+        return queue;
+    }
+
+
+
+    public void addOperation(int id, int customerId, double sum, Currency currency,
+                             String merchant){
+        Operation operation = new Operation();
+        queue.add(operation);
+    }
+
+    public boolean addOperation(Operation operation){
+        System.out.println("Operation added for processing " + operation);
         return queue.offer(operation);
     }
 

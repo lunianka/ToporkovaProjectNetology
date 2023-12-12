@@ -7,6 +7,7 @@ import ru.netology.toporkova.controller.CustomerController;
 import ru.netology.toporkova.controller.dto.CustomerDto;
 import ru.netology.toporkova.controller.dto.CustomersGetResponse;
 import ru.netology.toporkova.domain.Customer;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -20,6 +21,14 @@ public class CustomerServiceTest extends OperationHistoryApiApplicationTest {
         assertEquals(new Customer(1, "Spring", "pass"), customerService.getCustomer(0));
         assertEquals(new Customer(2, "Boot", "pass"), customerService.getCustomer(1));
     }
+
+//    @Test
+//    public void addCustomerTest(){
+//        customerService.addCustomer("AAA");
+//        List<Customer> customers = customerService.getCustomers();
+//        Customer customer1 = customers.get(customers.size()-1);
+//        assertEquals("AAA", customer1.getName());
+//    }
 
     @Test
     public void saveInCustomerServiceTest(){

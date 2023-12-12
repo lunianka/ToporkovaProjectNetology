@@ -6,7 +6,7 @@ public class CashbackOperation extends Operation implements ConsolePrintable {
     private int cashbackAmount;
 
     public CashbackOperation(Integer id, Integer sum, Currency currency, String merchant, Integer customerId, int cashbackAmount) {
-        super(id, sum, currency, merchant, customerId);
+        super(id, customerId, sum, currency, merchant);
         this.cashbackAmount = cashbackAmount;
     }
 
