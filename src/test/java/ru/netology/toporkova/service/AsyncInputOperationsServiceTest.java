@@ -19,7 +19,7 @@ public class AsyncInputOperationsServiceTest extends OperationHistoryApiApplicat
 
     @Test
     public void asyncInputOperationServiceWorksTest() throws InterruptedException {
-        Operation operation = new Operation(5, 6, 100, Currency.USD, "Restaurant");
+        Operation operation = new Operation(5, 6, 100, Currency.USD, "Supermarket");
 
         asyncInputOperationService.offerOperation(operation);
         Thread.sleep(3L * properties.getSleepMilliSeconds());

@@ -18,29 +18,32 @@ public class OperationControllerTest extends OperationHistoryApiApplicationTest 
 
     @Test
     public void getOperationTest() {
-        OperationDto operations = new OperationDto(2, 2,1500, Currency.RUB, "Rr");
-        assertEquals(1500, operations.getSum());
-        assertEquals("Rr", operations.getMerchant());
-        assertEquals(2, operations.getCustomerId());
-        assertEquals(2, operations.getId());
+        int operationId = 2;
+        int customerId = 1;
+        OperationDto operations = new OperationDto(operationId, customerId,3000, Currency.RUB, "Bar");
+        assertEquals(operationId, operations.getId());
+        assertEquals(customerId, operations.getCustomerId());
+        assertEquals(3000, operations.getSum());
         assertEquals(Currency.RUB, operations.getCurrency());
+        assertEquals("Bar", operations.getMerchant());
     }
 
     @Test
     public void addOperationTest() {
-        Operation operation = new Operation(1, 1,1000, Currency.RUB, "Shoko");
+        Operation operation = new Operation(1, 1,1000, Currency.RUB, "Pharmacy");
         asyncInputOperationService.addOperation(operation);
         Queue<Operation> operations = asyncInputOperationService.getOperations();
-        assertEquals("[Operation(id=1, customerId=1, sum=1000, currency=RUB, merchant=Shoko)]", operations.toString());
+        assertEquals("[Operation(id=1, customerId=1, sum=1000, currency=RUB, merchant=Pharmacy)]", operations.toString());
     }
 
     @Test
     public void removeOperationTest(){
-        Operation operation = new Operation(1, 1,1000, Currency.RUB, "Shoko");
+        int operationId = 2;
+        int customerId = 2;
+        Operation operation = new Operation(operationId, customerId,1500, Currency.RUB, "Theatre");
         asyncInputOperationService.addOperation(operation);
         int i = asyncInputOperationService.getOperations().size();
-        int operationId = 0;
-        OperationController.deleteOperation(operationId);
+        OperationController.removeOperation(operationId, customerId);
         int y = asyncInputOperationService.getOperations().size();
         assertEquals(i, y);
     }

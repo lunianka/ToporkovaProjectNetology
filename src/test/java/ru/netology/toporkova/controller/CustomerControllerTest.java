@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.netology.toporkova.OperationHistoryApiApplicationTest;
+import ru.netology.toporkova.controller.dto.CustomersGetResponse;
 import ru.netology.toporkova.domain.Customer;
 import ru.netology.toporkova.controller.dto.CustomerDto;
 
@@ -14,56 +15,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@AutoConfigureMockMvc
 public class CustomerControllerTest extends OperationHistoryApiApplicationTest {
     @Autowired
-    private MockMvc mvc;
-    @Autowired
-    private ObjectMapper objectMapper;
+    private CustomerController customerController;
 
     @Test
-    public void customerControllerWorksTest() throws Exception {
-        List<CustomerDto> customersDto = new ArrayList<>(List.of(
-                new CustomerDto(1, "Spring"), new CustomerDto(2, "Boot")
-        ));
-
-        mvc.perform(MockMvcRequestBuilders.get("/api/customers"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[*].id", containsInAnyOrder(1, 2)))
-                .andExpect(jsonPath("$[*].name", containsInAnyOrder("Spring", "Boot")));
-
-
-        mvc.perform(MockMvcRequestBuilders.get("/api/customers/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", equalTo(1)))
-                .andExpect(jsonPath("$.name", equalTo("Spring")));
-
-        mvc.perform(MockMvcRequestBuilders.get("/api/customers/2"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", equalTo(2)))
-                .andExpect(jsonPath("$.name", equalTo("Boot")));
-
-        mvc.perform(MockMvcRequestBuilders.get("/api/customers/23"))
-                .andExpect(status().isNotFound());
-
-        Customer john = new Customer(5, "John", "password");
-        mvc.perform(MockMvcRequestBuilders.post("/api/customers")
-                        .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(john)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", equalTo(john.getId())))
-                .andExpect(jsonPath("$.name", equalTo(john.getName())));
-
-        customersDto.add(new CustomerDto(john.getId(), john.getName()));
-        mvc.perform(MockMvcRequestBuilders.get("/api/customers"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[*].id", containsInAnyOrder(1, 2, john.getId())))
-                .andExpect(jsonPath("$[*].name", containsInAnyOrder("Spring", "Boot", john.getName())));
+    public void getCustomerByIdNullTest(){
+        CustomerDto customerDTO = customerController.getCustomerById(10);
+        assertNull(customerDTO);
     }
+
+    @Test
+    public void getCustomerByIdTest(){
+        CustomerDto customerDto = customerController.getCustomerById(1);
+        assertEquals(1, customerDto.getId());
+        assertEquals("Spring", customerDto.getName());
+    }
+
+    @Test
+    public void getCustomersTest(){
+        CustomersGetResponse customers = customerController.getCustomers();
+        CustomerDto customer1 = customers.getCustomers().get(0);
+        CustomerDto customer2 = customers.getCustomers().get(1);
+
+        assertEquals(1, customer1.getId());
+        assertEquals("Spring", customer1.getName());
+        assertEquals(2, customer2.getId());
+        assertEquals("Boot", customer2.getName());
+    }
+
+    @Test
+    public void addCustomerTest(){
+        int customerId = 5;
+        String customerName = "Anna";
+        Customer customer1 = new Customer(customerId, customerName) ;
+        customerController.addCustomer(customer1);
+        assertEquals(customerId, customer1.getId());
+        assertEquals(customerName, customer1.getName());
+    }
+
 }

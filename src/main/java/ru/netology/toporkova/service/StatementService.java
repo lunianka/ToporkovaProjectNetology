@@ -20,15 +20,35 @@ public class StatementService {
         return storage.containsKey(customerId) ? storage.getOrDefault(customerId, List.of()) : null;
     }
 
-    public Operation getOperation(int clientId, int operationIndex) {
-        return storage.get(clientId).get(operationIndex);
+    public Operation getOperation(int customerId, int operationIndex) {
+        return storage.get(customerId).get(operationIndex);
     }
 
-    public void setOperation(int clientId, Operation operation) {
-        List<Operation> operations = storage.getOrDefault(clientId, new ArrayList<>());
+    public String getOperationsForCustomers(int customerId) {
+        return storage.get(customerId).toString();
+    }
+
+    public String getOperations(){
+        return storage.toString();
+    }
+
+    public void setOperation(int customerId, Operation operation) {
+        List<Operation> operations = storage.get(customerId);
+
+        if (operations == null) {
+            operations = new ArrayList<>();
+        }
 
         operations.add(operation);
 
-        storage.put(clientId, operations);
+        storage.put(customerId, operations);
+    }
+
+    public void removeOperation(int customerId, int operationId){
+        List<Operation> operations = storage.get(customerId);
+        if (operations == null)
+            return;
+
+        operations.removeIf(o -> o.getId() == operationId);
     }
 }

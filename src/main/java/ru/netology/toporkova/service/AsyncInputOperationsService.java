@@ -24,8 +24,6 @@ public class AsyncInputOperationsService {
         return queue;
     }
 
-
-
     public void addOperation(int id, int customerId, double sum, Currency currency,
                              String merchant){
         Operation operation = new Operation();

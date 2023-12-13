@@ -5,7 +5,7 @@ import lombok.*;
 
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @ToString
 public class LoanOperation extends Operation{
     private int loanId;
@@ -13,10 +13,6 @@ public class LoanOperation extends Operation{
     public LoanOperation(Integer id, Integer sum, Currency currency, String merchant, Integer customerId, int loanId) {
         super(id, customerId, sum, currency, merchant);
         this.loanId = loanId;
-    }
-
-    public int getLoanId() {
-        return loanId;
     }
 
     public void setLoanId(int loanId) {

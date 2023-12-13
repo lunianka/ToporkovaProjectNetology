@@ -1,10 +1,9 @@
 package ru.netology.toporkova.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.netology.toporkova.controller.dto.CustomerDto;
+import ru.netology.toporkova.controller.dto.CustomersGetResponse;
 import ru.netology.toporkova.domain.Customer;
 import ru.netology.toporkova.service.CustomerService;
 
@@ -17,31 +16,34 @@ import java.util.List;
 public class CustomerController {
     private final CustomerService customerService;
 
-    @PostMapping
-    public CustomerDto postCustomer(@RequestBody Customer customer) {
-        customerService.addCustomer(customer);
-
-        return new CustomerDto(customer.getId(), customer.getName());
-    }
-
     @GetMapping
-    public Iterable<CustomerDto> getCustomers() {
+    public CustomersGetResponse getCustomers() {
         List<CustomerDto> customersDTO = new ArrayList<>();
 
         for (Customer customer : customerService.getCustomers()) {
             customersDTO.add(new CustomerDto(customer.getId(), customer.getName()));
         }
 
-        return customersDTO;
+        return new CustomersGetResponse(customersDTO);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerDto> getCustomerById(@PathVariable Integer id) {
+    public CustomerDto getCustomerById(@PathVariable Integer id) {
         for(Customer customer : customerService.getCustomers()){
             if(customer.getId().equals(id)){
-                return new ResponseEntity<>(new CustomerDto(customer.getId(), customer.getName()), HttpStatus.OK);
+                return new CustomerDto(customer.getId(), customer.getName());
             }
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return null;
+    }
+
+    @PostMapping("/{customerId}")
+    public void addCustomer(@RequestBody  Customer customer){
+        customerService.addCustomer(customer.getId(), customer.getName());
+    }
+
+    @DeleteMapping("{customerId}")
+    public void removeCustomer(@PathVariable int customerId) {
+        customerService.removeCustomer(customerId);
     }
 }

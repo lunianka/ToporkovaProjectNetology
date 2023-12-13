@@ -13,22 +13,27 @@ public class StatementServiceTest extends OperationHistoryApiApplicationTest {
     private StatementService statementService;
 
     @Test
-    public void saveInStatementServiceTest() {
-        int operationId = 1;
-        int operationSum = 300;
-        Currency operationCurrency = Currency.RUB;
-        String operationMerchant = "Restaurant";
+    public void saveOperationInStatementServiceTest() {
         int customerId = 3;
 
-        Operation operation = new Operation(operationId, customerId, operationSum, operationCurrency, operationMerchant);
+        Operation operation = new Operation(4, customerId, 1900, Currency.RUB, "Cafe");
         statementService.setOperation(customerId, operation);
         Operation operationOfService = statementService.getOperation(customerId, 0);
 
         assertEquals(operation, operationOfService);
-        assertEquals(operationId, operationOfService.getId());
-        assertEquals(operationSum, operationOfService.getSum());
-        assertEquals(operationCurrency, operationOfService.getCurrency());
-        assertEquals(operationMerchant, operationOfService.getMerchant());
+        assertEquals(4, operationOfService.getId());
+        assertEquals(1900, operationOfService.getSum());
+        assertEquals(Currency.RUB, operationOfService.getCurrency());
+        assertEquals("Cafe", operationOfService.getMerchant());
         assertEquals(customerId, operationOfService.getCustomerId());
+    }
+    @Test
+    public void removeOperationTest(){
+        int customerId = 7;
+        int operationId = 6;
+        Operation operation = new Operation(operationId, customerId, 3000, Currency.RUB, "Cafe");
+        statementService.setOperation(customerId, operation);
+        statementService.removeOperation(customerId, operationId);
+        assertEquals("[]", statementService.getOperationsForCustomers(customerId));
     }
 }
